@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Anon{% endblock %}
+
+{% block content %}
+<div style="padding: 40px 0;">
+  <div class="container">
+
+    <!-- breadcrumb -->
+    <p style="margin-bottom: 20px;">
+      <a href="{% url 'home' %}">Home</a> /
+      {% if product.category %}{{ product.category.name }} / {% endif %}
+      <b>{{ product.name }}</b>
+    </p>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 40px;">
+
+      <!-- product image -->
+      <div style="flex: 1; min-width: 280px;">
+        <div class="showcase-banner">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" width="400" class="product-img default">
+          {% else %}
+            <p>Image available soon</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- product info -->
+      <div style="flex: 1; min-width: 280px;">
+
+        {% if product.category %}
+          <a href="#" class="showcase-category">{{ product.category.name }}</a>
+        {% endif %}
+
+        <h1 class="showcase-title" style="font-size: 26px; margin: 10px 0;">{{ product.name }}</h1>
+
+        <div class="price-box">
+          <p class="price" style="font-size: 22px;">${{ product.price }}</p>
+        </div>
+
+        <p style="margin: 20px 0; line-height: 1.6;">{{ product.description }}</p>
+
+        <form action="{% url 'add_to_cart' product.id %}" method="post" style="display: flex; align-items: center; gap: 15px; margin-top: 20px;">
+          {% csrf_token %}
+          <input type="number" name="quantity" value="1" min="1" style="width: 70px; padding: 8px;">
+          <button type="submit" class="btn-newsletter">
+            <ion-icon name="bag-add-outline"></ion-icon>
+            Add to Cart
+          </button>
+        </form>
+
+      </div>
+
+    </div>
+
+    <!-- related products -->
+    {% if related_products %}
+    <div style="margin-top: 60px;">
+      <h2 class="title">Related Products</h2>
+      <div class="product-grid">
+        {% for rp in related_products %}
+        <div class="showcase">
+          <div class="showcase-banner">
+            <a href="{% url 'product_detail' rp.id %}">
+              {% if rp.image %}
+                <img src="{{ rp.image.url }}" alt="{{ rp.name }}" width="300" class="product-img default">
+              {% endif %}
+            </a>
+          </div>
+          <div class="showcase-content">
+            <a href="{% url 'product_detail' rp.id %}">
+              <h3 class="showcase-title">{{ rp.name }}</h3>
+            </a>
+            <div class="price-box">
+              <p class="price">${{ rp.price }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

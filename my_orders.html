@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders - Anon{% endblock %}
+
+{% block content %}
+<div style="padding: 40px 0;">
+  <div class="container">
+
+    <h1 class="title" style="text-align: left; margin-bottom: 30px;">My Orders</h1>
+
+    {% if orders %}
+      {% for order in orders %}
+      <div style="background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 10px;">
+          <p><b>Order #{{ order.id }}</b> — {{ order.created_at|date:"d M Y" }}</p>
+          <p style="text-transform: capitalize;">
+            Status: <b>{{ order.get_status_display }}</b>
+          </p>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+          {% for item in order.items.all %}
+          <tr style="border-bottom: 1px solid #333;">
+            <td style="padding: 8px;">{{ item.product.name }}</td>
+            <td style="padding: 8px;">Qty: {{ item.quantity }}</td>
+            <td style="padding: 8px;">${{ item.get_subtotal }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+
+        <p style="text-align: right; font-weight: bold;">Total: ${{ order.total_price }}</p>
+
+      </div>
+      {% endfor %}
+    {% else %}
+      <p>Abhi tak koi order nahi kiya.</p>
+      <a href="{% url 'home' %}" class="btn-newsletter" style="display: inline-block; margin-top: 15px; text-decoration: none;">
+        Shopping Shuru Karein
+      </a>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

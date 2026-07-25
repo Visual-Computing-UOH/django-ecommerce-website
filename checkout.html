@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - Anon{% endblock %}
+
+{% block content %}
+<div style="padding: 40px 0;">
+  <div class="container">
+
+    <h1 class="title" style="text-align: left; margin-bottom: 30px;">Checkout</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="padding: 10px; background: #2e2e2e; border-left: 4px solid #e74c3c; margin-bottom: 15px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <div style="display: flex; flex-wrap: wrap; gap: 40px;">
+
+      <!-- Order form -->
+      <div style="flex: 2; min-width: 280px;">
+        <h2 style="font-size: 20px; margin-bottom: 15px;">Shipping Details</h2>
+
+        <form action="{% url 'checkout' %}" method="post" style="display: flex; flex-direction: column; gap: 15px;">
+          {% csrf_token %}
+
+          <input type="text" name="full_name" placeholder="Full Name" required
+            style="padding: 10px; background: #1e1e1e; border: 1px solid #444; color: #fff;">
+
+          <input type="email" name="email" placeholder="Email Address" required
+            style="padding: 10px; background: #1e1e1e; border: 1px solid #444; color: #fff;">
+
+          <input type="text" name="phone" placeholder="Phone Number" required
+            style="padding: 10px; background: #1e1e1e; border: 1px solid #444; color: #fff;">
+
+          <input type="text" name="city" placeholder="City" required
+            style="padding: 10px; background: #1e1e1e; border: 1px solid #444; color: #fff;">
+
+          <textarea name="address" placeholder="Full Address" rows="3" required
+            style="padding: 10px; background: #1e1e1e; border: 1px solid #444; color: #fff;"></textarea>
+
+          <button type="submit" class="btn-newsletter" style="margin-top: 10px;">
+            Place Order (Cash on Delivery)
+          </button>
+        </form>
+      </div>
+
+      <!-- Order summary -->
+      <div style="flex: 1; min-width: 260px; background: #1e1e1e; padding: 20px; border-radius: 8px;">
+        <h2 style="font-size: 20px; margin-bottom: 15px;">Order Summary</h2>
+
+        {% for item in cart %}
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333;">
+          <span>{{ item.product.name }} × {{ item.quantity }}</span>
+          <span>${{ item.subtotal }}</span>
+        </div>
+        {% endfor %}
+
+        <div style="display: flex; justify-content: space-between; padding: 15px 0; font-weight: bold; font-size: 18px;">
+          <span>Total</span>
+          <span>${{ cart.get_total_price }}</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+{% endblock %}

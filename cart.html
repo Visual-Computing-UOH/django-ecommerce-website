@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Your Cart - Anon{% endblock %}
+
+{% block content %}
+<div style="padding: 40px 0;">
+  <div class="container">
+
+    <h1 class="title" style="text-align: left; margin-bottom: 30px;">Your Shopping Cart</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="padding: 10px; background: #2e2e2e; border-left: 4px solid #4caf50; margin-bottom: 15px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if cart|length > 0 %}
+
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="text-align: left; border-bottom: 2px solid #444;">
+          <th style="padding: 12px;">Product</th>
+          <th style="padding: 12px;">Price</th>
+          <th style="padding: 12px;">Quantity</th>
+          <th style="padding: 12px;">Subtotal</th>
+          <th style="padding: 12px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart %}
+        <tr style="border-bottom: 1px solid #333;">
+          <td style="padding: 12px; display: flex; align-items: center; gap: 12px;">
+            {% if item.product.image %}
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="60" style="border-radius: 6px;">
+            {% endif %}
+            <a href="{% url 'product_detail' item.product.id %}" style="color: inherit;">{{ item.product.name }}</a>
+          </td>
+          <td style="padding: 12px;">${{ item.product.price }}</td>
+          <td style="padding: 12px;">
+            <form action="{% url 'update_cart' item.product.id %}" method="post" style="display: flex; gap: 8px;">
+              <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 60px; padding: 6px;">
+              <button type="submit" class="btn-newsletter" style="padding: 6px 12px;">Update</button>
+            </form>
+          </td>
+          <td style="padding: 12px;">${{ item.subtotal }}</td>
+          <td style="padding: 12px;">
+            <a href="{% url 'remove_from_cart' item.product.id %}" style="color: #e74c3c;">Remove</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div style="text-align: right; margin-top: 30px;">
+      <h2 style="font-size: 22px;">Total: ${{ cart.get_total_price }}</h2>
+      <a href="{% url 'home' %}" class="btn-newsletter" style="display: inline-block; margin-top: 15px; margin-right: 10px; text-decoration: none;">
+        Continue Shopping
+      </a>
+      <a href="{% url 'checkout' %}" class="btn-newsletter" style="display: inline-block; margin-top: 15px; text-decoration: none;">
+        Proceed to Checkout
+      </a>
+    </div>
+
+    {% else %}
+      <p>Aapka cart abhi khali hai.</p>
+      <a href="{% url 'home' %}" class="btn-newsletter" style="display: inline-block; margin-top: 15px; text-decoration: none;">
+        Shopping Shuru Karein
+      </a>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

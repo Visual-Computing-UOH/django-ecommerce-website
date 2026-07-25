@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hot Offers - Anon{% endblock %}
+
+{% block content %}
+<div style="padding: 40px 0;">
+  <div class="container">
+
+    <h1 class="title" style="text-align: left; margin-bottom: 30px;">🔥 Hot Offers</h1>
+
+    {% if products|length > 0 %}
+    <div class="showcase-container" style="display:flex; flex-wrap:wrap; gap:20px;">
+      {% for product in products %}
+      <div class="showcase" style="width: 220px; border:1px solid #333; border-radius:8px; padding:12px;">
+
+        <a href="{% url 'product_detail' product.id %}" class="showcase-img-box">
+          {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100%" class="showcase-img" style="width:100%; height:auto; border-radius:6px;">
+          {% endif %}
+        </a>
+
+        <div class="showcase-content" style="margin-top:10px;">
+          <a href="{% url 'product_detail' product.id %}">
+            <h4 class="showcase-title">{{ product.name }}</h4>
+          </a>
+
+          {% if product.category %}
+          <a href="{% url 'home' %}?category={{ product.category.id }}" class="showcase-category">{{ product.category.name }}</a>
+          {% endif %}
+
+          <div class="price-box">
+            <del>${{ product.old_price }}</del>
+            <p class="price">${{ product.price }}</p>
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="padding: 10px 0; opacity: 0.7;">Abhi koi hot offer available nahi hai.</p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

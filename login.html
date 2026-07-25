@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Anon{% endblock %}
+
+{% block content %}
+<div style="padding: 60px 0; display: flex; justify-content: center;">
+  <div style="max-width: 400px; width: 100%; background: #1e1e1e; padding: 30px; border-radius: 8px;">
+
+    <h1 class="title" style="text-align: left; margin-bottom: 20px;">Login</h1>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="padding: 10px; background: #2e2e2e; border-left: 4px solid #e74c3c; margin-bottom: 15px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div>
+          <label style="display:block; margin-bottom:5px; font-size:14px;">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn-newsletter" style="margin-top: 10px;">Login</button>
+    </form>
+
+    <p style="margin-top: 20px; font-size: 14px;">
+      Naya account banana hai? <a href="{% url 'signup' %}">Sign up here</a>
+    </p>
+
+  </div>
+</div>
+
+<style>
+  form input {
+    padding: 10px;
+    background: #121212;
+    border: 1px solid #444;
+    color: #fff;
+    width: 100%;
+    border-radius: 4px;
+  }
+</style>
+{% endblock %}
